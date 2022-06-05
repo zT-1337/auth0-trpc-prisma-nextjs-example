@@ -1,14 +1,27 @@
-import { useUser } from "@auth0/nextjs-auth0";
+import { getSession, UserProfile, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import Image from "next/image";
 
-const Profile = () => {
-  const {user, error, isLoading} = useUser();
+export const getServerSideProps = withPageAuthRequired({
+  returnTo: '/',
+  async getServerSideProps(ctx) {
+    // access the user session
+    const session = getSession(ctx.req, ctx.res);
 
+    if (session?.user.email !== 'thomas.zerr@gmail.com') {
+      ctx.res.statusCode = 302;
+      ctx.res.setHeader('Location', '/');
+      return {redirect: { permanent: false, destination: "/"}};
+    }
+
+    return { props: { customProp: JSON.stringify(session) } };
+  }
+});
+
+const Profile = ({user, customProp}: {user: UserProfile, customProp: string}) => {
   if (user?.picture === null) user.picture = undefined;
   if (user?.name === null) user.name = undefined;
 
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div>{error.message}</div>
+  console.log(customProp);
 
   return (
     user && (
