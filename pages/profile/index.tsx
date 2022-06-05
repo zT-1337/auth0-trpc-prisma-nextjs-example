@@ -14,7 +14,7 @@ const Profile = () => {
     user && (
       <div>
         {user.picture && <Image src={user.picture} alt={user.name} width={32} height={32}/>}
-        <h2>{user.name}</h2>
+        <h2>{user.nickname}</h2>
         <p>{user.email}</p>
       </div>
     )
