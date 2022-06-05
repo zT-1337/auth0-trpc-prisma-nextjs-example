@@ -7,7 +7,7 @@ export const getServerSideProps = withPageAuthRequired({
     // access the user session
     const session = getSession(ctx.req, ctx.res);
 
-    if (session?.user.email !== 'thomas.zerr@gmail.com') {
+    if (session?.user.role !== 'admin') {
       ctx.res.statusCode = 302;
       ctx.res.setHeader('Location', '/');
       return {redirect: { permanent: false, destination: "/"}};
@@ -20,8 +20,6 @@ export const getServerSideProps = withPageAuthRequired({
 const Profile = ({user, customProp}: {user: UserProfile, customProp: string}) => {
   if (user?.picture === null) user.picture = undefined;
   if (user?.name === null) user.name = undefined;
-
-  console.log(customProp);
 
   return (
     user && (
